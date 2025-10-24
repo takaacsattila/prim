@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prímfelbontás Kalkulátor</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100%;
+            color: #333;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 300;
+        }
+
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .input-section {
+            padding: 40px;
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #555;
+        }
+
+        input[type="number"] {
+            width: 200px;
+            padding: 15px 20px;
+            font-size: 1.3rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .calculate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .results {
+            padding: 0 40px 40px 40px;
+        }
+
+        .factorization-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        .division-table {
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .division-steps {
+            flex: 1;
+        }
+
+        .division-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            position: relative;
+        }
+
+        .number {
+            width: 80px;
+            text-align: right;
+            padding-right: 15px;
+        }
+
+        .division-steps {
+            position: relative;
+        }
+
+        .division-steps::before {
+            content: '';
+            position: absolute;
+            left: 95px;
+            top: 40px;
+            bottom: 0;
+            width: 2px;
+            background: #333;
+            z-index: 1;
+        }
+
+        .prime {
+            width: 40px;
+            text-align: left;
+            font-weight: bold;
+            color: #667eea;
+            padding-left: 15px;
+        }
+
+        .final-result {
+            background: white;
+            border: 2px solid #4facfe;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .result-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .prime-factorization {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #667eea;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .error {
+            background: #ffe6e6;
+            color: #d63031;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .input-section, .results {
+                padding: 20px;
+            }
+            
+            input[type="number"] {
+                width: 150px;
+            }
+            
+            .division-table {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔢 Prímfelbontás</h1>
+            <p>Bontsd fel a számokat prímtényezőkre matematikai módszerrel</p>
+        </div>
+
+        <div class="input-section">
+            <form id="factorForm">
+                <div class="input-group">
+                    <label for="numberInput">Írd be a számot:</label>
+                    <input type="number" id="numberInput" min="2" max="1000000" placeholder="pl. 60" required>
+                </div>
+                <button type="submit" class="calculate-btn">Prímfelbontás</button>
+            </form>
+        </div>
+
+        <div class="results">
+            <div id="errorMessage" class="error hidden"></div>
+            <div id="resultContainer" class="factorization-container hidden">
+                <div class="division-table">
+                    <div class="division-steps">
+                        <h3 style="margin-top: 0; color: #333;">Felbontás lépései:</h3>
+                        <div id="divisionSteps"></div>
+                    </div>
+                </div>
+                <div class="final-result">
+                    <div class="result-title">Prímfelbontás hatvány alakban:</div>
+                    <div id="primeFactorization" class="prime-factorization"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('factorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const input = document.getElementById('numberInput');
+            const number = parseInt(input.value);
+            
+            // Hibakezelés
+            if (isNaN(number) || number < 2) {
+                showError('Kérlek, adj meg egy 2-nél nagyobb egész számot!');
+                return;
+            }
+            
+            if (number > 1000000) {
+                showError('A szám túl nagy! Maximum 1,000,000-ig számolok.');
+                return;
+            }
+            
+            // Prímfelbontás számítása
+            const result = primeFactorization(number);
+            displayResult(number, result);
+        });
+
+        function primeFactorization(n) {
+            const steps = [];
+            const factors = {};
+            let current = n;
+            let divisor = 2;
+
+            while (current > 1) {
+                if (current % divisor === 0) {
+                    steps.push({ number: current, prime: divisor });
+                    factors[divisor] = (factors[divisor] || 0) + 1;
+                    current = current / divisor;
+                } else {
+                    divisor++;
+                }
+            }
+
+            return { steps, factors };
+        }
+
+        function displayResult(originalNumber, result) {
+            hideError();
+            
+            const stepsContainer = document.getElementById('divisionSteps');
+            const factorizationContainer = document.getElementById('primeFactorization');
+            
+            // Lépések megjelenítése
+            stepsContainer.innerHTML = '';
+            result.steps.forEach(step => {
+                const row = document.createElement('div');
+                row.className = 'division-row';
+                row.innerHTML = `
+                    <span class="number">${step.number}</span>
+                    <span class="prime">${step.prime}</span>
+                `;
+                stepsContainer.appendChild(row);
+            });
+
+            // Végső sor (1)
+            const finalRow = document.createElement('div');
+            finalRow.className = 'division-row';
+            finalRow.innerHTML = `
+                <span class="number">1</span>
+                <span class="prime"></span>
+            `;
+            stepsContainer.appendChild(finalRow);
+
+            // Hatvány alak megjelenítése
+            const factorization = Object.entries(result.factors)
+                .map(([prime, count]) => {
+                    if (count === 1) {
+                        return prime;
+                    } else {
+                        return `${prime}<sup>${count}</sup>`;
+                    }
+                })
+                .join(' × ');
+
+            factorizationContainer.innerHTML = `${originalNumber} = ${factorization}`;
+            
+            document.getElementById('resultContainer').classList.remove('hidden');
+        }
+
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.textContent = message;
+            errorElement.classList.remove('hidden');
+            document.getElementById('resultContainer').classList.add('hidden');
+        }
+
+        function hideError() {
+            document.getElementById('errorMessage').classList.add('hidden');
+        }
+
+        // Példa szám betöltése
+        document.getElementById('numberInput').value = '60';
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98df81e3e495733b',t:'MTc2MDM2NTUzOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
